@@ -14,8 +14,6 @@
 #define INDEX 5
 #define OFFSET 6
 
-unsigned int ultimoBloque;
-
 /**
  * Cache.
  * Tamaño: 16 KB.
@@ -40,6 +38,9 @@ struct conjunto {
 };
 
 struct cache {
+    unsigned int hits;
+    unsigned int missses;
+    unsigned int ultimoBloque;
     struct conjunto conjuntos[CANT_CONJUNTOS];
 } cache;
 

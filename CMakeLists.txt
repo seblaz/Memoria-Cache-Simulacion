@@ -13,6 +13,9 @@ file(GLOB_RECURSE tests
     "tests/*.c"
 )
 
+# Copiar las pruebas
+file(COPY pruebas DESTINATION ${CMAKE_BINARY_DIR})
+
 # add the executable
 add_executable(tp2 ${src} main/main.c)
 

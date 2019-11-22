@@ -6,7 +6,9 @@
 #include "memoria_principal.h"
 
 void iniciar_cache() {
-    ultimoBloque = 0;
+    cache.hits = 0;
+    cache.missses = 0;
+    cache.ultimoBloque = 0;
     for (int i = 0; i < 32; i++)
         for (int j = 0; j < 8; j++) {
             cache.conjuntos[i].vias[j].valido = false;
@@ -49,9 +51,10 @@ void read_tocache(unsigned int blocknum, unsigned int way, unsigned int set) {
     for (int i = 0; i < SIZE_BLOQUE; i++)
         cache.conjuntos[set].vias[way].data[i] = memoria_principal.data[blocknum * SIZE_BLOQUE + i];
 
-    cache.conjuntos[set].vias[way].numero = ++ultimoBloque;
+    cache.conjuntos[set].vias[way].numero = ++cache.ultimoBloque;
     cache.conjuntos[set].vias[way].dirty = false;
     cache.conjuntos[set].vias[way].valido = true;
+    cache.conjuntos[set].vias[way].tag = get_tag(blocknum * SIZE_BLOQUE);
 }
 
 unsigned char read_byte(unsigned int address) {
@@ -59,11 +62,14 @@ unsigned char read_byte(unsigned int address) {
     unsigned int tag = get_tag(address);
     unsigned int offset = get_offset(address);
     for (int i = 0; i < BLOQUES_POR_CONJUNTO; i++)
-        if (cache.conjuntos[conjunto].vias[i].valido && cache.conjuntos[conjunto].vias[i].tag == tag)
+        if (cache.conjuntos[conjunto].vias[i].valido && cache.conjuntos[conjunto].vias[i].tag == tag) {
+            cache.hits++;
             return cache.conjuntos[conjunto].vias[i].data[offset];
+        }
 
     // El dato no se encuentra en cache => cargo el bloque y devuelvo el dato.
-    unsigned int way = select_oldest(address);
+    cache.missses++;
+    unsigned int way = select_oldest(conjunto);
     read_tocache(get_memblock(address), way, conjunto);
     return cache.conjuntos[conjunto].vias[way].data[offset];
 }
@@ -74,19 +80,26 @@ void write_byte(unsigned int address, unsigned char value) {
     unsigned int offset = get_offset(address);
     for (int i = 0; i < BLOQUES_POR_CONJUNTO; i++)
         if (cache.conjuntos[conjunto].vias[i].valido && cache.conjuntos[conjunto].vias[i].tag == tag) {
+            cache.hits++;
             cache.conjuntos[conjunto].vias[i].data[offset] = value;
             return;
         }
 
     // El dato no se encuentra en cache => cargo el bloque y lo escribo.
-    unsigned int way = select_oldest(address);
+    cache.missses++;
+    unsigned int way = select_oldest(conjunto);
     read_tocache(get_memblock(address), way, conjunto);
+    cache.conjuntos[conjunto].vias[way].dirty = true;
     cache.conjuntos[conjunto].vias[way].data[offset] = value;
 }
 
 void write_tomem(unsigned int way, unsigned int set) {
     unsigned int tag = cache.conjuntos[set].vias[way].tag;
-    unsigned int address = (tag << (INDEX + OFFSET)) + (set << INDEX);
+    unsigned int address = (tag << (INDEX + OFFSET)) + (set << OFFSET);
     for (int i = 0; i < SIZE_BLOQUE; i++)
         memoria_principal.data[address + i] = cache.conjuntos[set].vias[way].data[i];
+}
+
+float get_miss_rate() {
+    return (float) cache.missses / (float) (cache.hits + cache.missses);
 }
