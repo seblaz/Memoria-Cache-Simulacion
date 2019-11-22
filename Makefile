@@ -2,11 +2,15 @@ CFLAGS= -mno-mips16 -mgp32 -mfp32 -gpubnames  -mlong32 -mips1 -mabicalls -mlong-
 
 OBJS= tp2
 
-all: tp2
+all: tp2 ej_pruebas
 
-SRC=$(wildcard src/*.c main/*.c)
+SRC=$(wildcard src/*.c)
+TESTS=$(wildcard tests/*.c)
 
-tp2: $(SRC)
+tp2: $(SRC) main/*.c
+	gcc -g $^ -o $@
+
+ej_pruebas: $(SRC) $(TESTS)
 	gcc -g $^ -o $@
 
 clean:
