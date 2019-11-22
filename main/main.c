@@ -5,13 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../src/memoria_principal.h"
 #include "../src/cache.h"
-
-void init() {
-    iniciar_memoria_principal();
-    iniciar_cache();
-}
 
 void read_file(char *file_path) {
     FILE *fp;

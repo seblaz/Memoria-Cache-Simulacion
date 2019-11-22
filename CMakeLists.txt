@@ -20,6 +20,6 @@ file(COPY pruebas DESTINATION ${CMAKE_BINARY_DIR})
 add_executable(tp2 ${src} main/main.c)
 
 # add the executable
-add_executable(pruebas ${src} ${tests})
+add_executable(ej_pruebas ${src} ${tests})
 
 set_property(TARGET tp2 PROPERTY C_STANDARD 11)

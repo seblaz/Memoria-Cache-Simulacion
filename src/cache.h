@@ -14,6 +14,17 @@
 #define INDEX 5
 #define OFFSET 6
 
+void init();
+
+/**
+ * Memoria principal.
+ */
+ struct memoria_principal {
+    unsigned char data [65536];
+} memoria_principal;
+
+void iniciar_memoria_principal();
+
 /**
  * Cache.
  * Tamaño: 16 KB.

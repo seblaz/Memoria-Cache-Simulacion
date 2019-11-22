@@ -3,7 +3,7 @@
 //
 
 #include "cache.h"
-#include "memoria_principal.h"
+#include <string.h>
 
 void iniciar_cache() {
     cache.hits = 0;
@@ -17,20 +17,29 @@ void iniciar_cache() {
         }
 }
 
+void iniciar_memoria_principal() {
+     memset(memoria_principal.data, 0, sizeof memoria_principal);
+}
+
+void init(){
+    iniciar_cache();
+    iniciar_memoria_principal();
+}
+
 unsigned int get_offset(unsigned int address) {
     return address & 0b00111111;
 }
 
 unsigned int find_set(unsigned int address) {
-    return (address & 0b011111000000) >> 6;
+    return (address & 0b011111000000) >> OFFSET;
 }
 
 unsigned int get_tag(unsigned int address) {
-    return address >> 11;
+    return address >> (OFFSET + INDEX);
 }
 
 unsigned int get_memblock(unsigned int address) {
-    return address >> 6;
+    return address >> (OFFSET);
 }
 
 unsigned int select_oldest(unsigned int setnum) {
