@@ -4,7 +4,9 @@ OBJS= tp2
 
 all: tp2
 
-tp2: main.c
+SRC=$(wildcard src/*.c main/*.c)
+
+tp2: $(SRC)
 	gcc -g $^ -o $@
 
 clean:
