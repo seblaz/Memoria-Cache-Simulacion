@@ -1,7 +1,3 @@
-//
-// Created by sebas on 21/11/19.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +19,9 @@ void read_file(char *file_path) {
             init();
         }else if (line[0] == 'R') {
             unsigned int address = atoi(line + 2);
+            if (address < TAMANIO_DE_MEMORIA){
             printf("Se ejecuta read_byte(%i) con resultado: %u.\n", address, read_byte(address));
+            }
         } else if (line[0] == 'W') {
             unsigned int address = strtol(line + 2, &rmg, 10);
             unsigned int value = strtol(rmg + 2, &rmg, 10);

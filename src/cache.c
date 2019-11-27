@@ -1,7 +1,3 @@
-//
-// Created by sebas on 21/11/19.
-//
-
 #include "cache.h"
 #include <string.h>
 

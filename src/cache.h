@@ -1,7 +1,3 @@
-//
-// Created by sebas on 21/11/19.
-//
-
 #ifndef TP2_CACHE_H
 #define TP2_CACHE_H
 
@@ -13,6 +9,7 @@
 #define TAG 5
 #define INDEX 5
 #define OFFSET 6
+#define TAMANIO_DE_MEMORIA 65536
 
 void init();
 
