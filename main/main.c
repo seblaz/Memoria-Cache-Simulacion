@@ -19,14 +19,20 @@ void read_file(char *file_path) {
             init();
         }else if (line[0] == 'R') {
             unsigned int address = atoi(line + 2);
-            if (address < TAMANIO_DE_MEMORIA){
-            printf("Se ejecuta read_byte(%i) con resultado: %u.\n", address, read_byte(address));
+            if (address < TAMANIO_DE_MEMORIA) {
+                printf("Se ejecuta read_byte(%i) con resultado: %u.\n", address, read_byte(address));
+            } else {
+                printf("Se intentó ejecutar read_byte(%i), pero la dirección se encuentra fuera de rango.\n", address);
             }
         } else if (line[0] == 'W') {
             unsigned int address = strtol(line + 2, &rmg, 10);
             unsigned int value = strtol(rmg + 2, &rmg, 10);
-            printf("Se ejecuta write_byte(%i, %i).\n", address, value);
-            write_byte(address, value);
+            if (address < TAMANIO_DE_MEMORIA) {
+                printf("Se ejecuta write_byte(%i, %i).\n", address, value);
+                write_byte(address, value);
+            } else {
+                printf("Se intentó ejecutar write_byte(%i), pero la dirección se encuentra fuera de rango.\n", address);
+            }
         } else if (line[0] == 'M' && line[1] == 'R'){
             printf("Se ejecuta get_miss_rate() con resultado: %f.\n", get_miss_rate());
         }
