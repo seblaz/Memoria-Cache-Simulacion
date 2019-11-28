@@ -14,4 +14,4 @@ ej_pruebas: $(SRC) $(TESTS)
 	gcc -g $^ -o $@
 
 clean:
-	rm tp2*
+	rm tp2* ej_pruebas
